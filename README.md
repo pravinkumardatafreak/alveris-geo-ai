@@ -2,7 +2,7 @@
 
 [![CI - Pytest & Static Analysis](https://img.shields.io/badge/CI-Passing-brightgreen?style=flat-square&logo=githubactions)](.github/workflows/ci.yml)
 [![Pylint Rating](https://img.shields.io/badge/Pylint-10.00%2F10-brightgreen?style=flat-square&logo=python)](pyproject.toml)
-[![Test Coverage](https://img.shields.io/badge/Tests-47%20Passed-blue?style=flat-square&logo=pytest)](tests/)
+[![Test Coverage](https://img.shields.io/badge/Tests-49%20Passed-blue?style=flat-square&logo=pytest)](tests/)
 [![Spatial Code Gates](https://img.shields.io/badge/Spatial%20Gates-Tier%202%20Compliant-orange?style=flat-square)](#spatial-code-gates--geodetic-integrity)
 [![Regulatory Standards](https://img.shields.io/badge/Regulatory-Basel%20III%20%7C%20SEC%20Climate-purple?style=flat-square)](#financial-valuation--climate-var-engine)
 [![Python Version](https://img.shields.io/badge/Python-3.11%20%7C%203.12%20%7C%203.13%20%7C%203.14-blue?style=flat-square&logo=python)](pyproject.toml)
@@ -108,7 +108,7 @@ The ALVERIS cockpit is designed for chief risk officers, credit committees, and 
 
 ### 1. Clone & Set Up Environment
 ```bash
-git clone https://github.com/your-username/alveris-geo-ai.git
+git clone https://github.com/pravinkumardatafreak/alveris-geo-ai.git
 cd alveris-geo-ai
 
 python -m venv .venv
