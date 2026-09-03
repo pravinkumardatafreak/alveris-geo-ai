@@ -1,0 +1,35 @@
+# ALVERIS Climate-Adjusted Valuation & Climate VaR Configuration
+# Version: 1.0.0
+# References: docs/ALVERIS_MASTER_SPEC.md (Sections 26, 27, 28, 29, 30)
+
+version: "1.0.0"
+
+# Baseline Valuation Defaults (when external transaction comps are not provided)
+baseline_valuation:
+  currency: "INR"
+  default_price_per_sqm:
+    urban_commercial: 45000.0   # ~4,180 INR/sqft
+    periurban_residential: 18000.0
+    agricultural_prime: 2500.0
+    inland_industrial: 12000.0
+
+# Usable Land Value Elasticity (Section 29)
+usable_land_loss:
+  direct_inundation_discount_factor: 1.00  # 1:1 value loss for permanently submerged area
+  buffer_damage_zone_factor: 0.25         # Residual economic impact on adjacent dry land within 30m
+
+# Operational & Accessibility Impact on Yield / Value
+network_disruption_impact:
+  max_travel_time_penalty_percent: 25.0   # Maximum valuation discount caused by permanent transport bottlenecks
+  full_isolation_discount_percent: 65.0   # Severe liquidity and collateral impairment if completely cut off
+
+# Scenario Downside Band Multipliers (Reflecting uncertainty and adaptation capacity)
+valuation_uncertainty_bands:
+  optimistic_mitigation_ratio: 0.85       # 15% discount mitigation via private flood barriers/elevation
+  central_estimate_ratio: 1.00
+  pessimistic_unmitigated_ratio: 1.25     # 25% accelerated impairment due to compounding systemic risks
+
+# Portfolio Climate Value-at-Risk (Climate VaR) Proxy Settings
+portfolio_analytics:
+  stress_percentile: 95.0                 # VaR 95% threshold
+  default_holding_horizon_years: 15

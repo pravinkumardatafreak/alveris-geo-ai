@@ -1,0 +1,38 @@
+{
+  "type": "FeatureCollection",
+  "name": "inland_logistics_parcel",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "asset_id": "ALV-TN-LG03",
+        "name": "Sriperumbudur Industrial Logistics Park",
+        "region": "Sriperumbudur Corridor, Tamil Nadu",
+        "land_use_class": "inland_industrial",
+        "baseline_market_value_inr": 34000000.0,
+        "utm_epsg": "EPSG:32644",
+        "vertical_datum_observed": "EGM2008",
+        "case_archetype": "inland_logistics_network_isolation",
+        "description": "Manufacturing and warehousing facility located on high ground but dependent on critical culvert/highway access routes."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [79.9450, 12.9610],
+            [79.9490, 12.9610],
+            [79.9490, 12.9655],
+            [79.9450, 12.9655],
+            [79.9450, 12.9610]
+          ]
+        ]
+      }
+    }
+  ]
+}

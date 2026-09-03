@@ -1,0 +1,69 @@
+# ALVERIS Climate Scenarios & Projection Configuration
+# Version: 1.1.0
+# References:
+#   - docs/ALVERIS_MASTER_SPEC.md (Sections 9, 10, 44)
+#   - docs/scientific_basis.md (IPCC AR6 WG1 Chapter 9, Figure 9.25, and SEC EDGAR Physical Risk Framework)
+
+version: "1.1.0"
+
+# Scenario Stress-Test Increments (Relative Water-Level Rise above Local Baseline Datum)
+stress_test_scenarios:
+  - id: "baseline"
+    name: "Baseline Current Day"
+    water_level_rise_m: 0.0
+    ipcc_ar6_reference: "Observed High Water Baseline (1995-2014 climatology)"
+    confidence_tier: "High Confidence"
+    description: "Current observed normal high-water conditions without additional climate forcing."
+  - id: "slr_0_5"
+    name: "+0.5m Moderate Rise"
+    water_level_rise_m: 0.5
+    ipcc_ar6_reference: "AR6 WG1 Fig 9.25 (2050 GMSL upper bound: 0.1-0.6m across all SSPs; or 10-year storm surge)"
+    confidence_tier: "High Confidence (2050 locked-in thermal expansion and glacier loss)"
+    description: "Screening scenario for low-to-moderate 2050 projection or local 10-year high-tide surge."
+  - id: "slr_1_0"
+    name: "+1.0m Severe Rise"
+    water_level_rise_m: 1.0
+    ipcc_ar6_reference: "AR6 WG1 Fig 9.25 (2100 median projection for SSP2-4.5 / SSP5-8.5: 0.5-1.02m)"
+    confidence_tier: "Medium Confidence"
+    description: "Screening scenario for mid-century extreme event or late-century median projection."
+  - id: "slr_1_5"
+    name: "+1.5m Extreme Rise"
+    water_level_rise_m: 1.5
+    ipcc_ar6_reference: "AR6 WG1 Section 9.6.3 (2100 high-end projection under SSP5-8.5: up to 1.6m; 100-year storm surge)"
+    confidence_tier: "Medium to Low Confidence"
+    description: "Screening scenario for high-end ice-sheet destabilization or 100-year coastal storm surge."
+  - id: "slr_2_0"
+    name: "+2.0m Catastrophic Stress"
+    water_level_rise_m: 2.0
+    ipcc_ar6_reference: "AR6 WG1 Fig 9.25 & Box 9.4 (Low-likelihood, high-impact storyline: Marine Ice Cliff Instability up to 2.4m by 2100)"
+    confidence_tier: "Low Confidence (High-Impact Tail Risk Storyline for Capital Stress-Testing)"
+    description: "Upper-bound stress test for long-term physical asset survivability, ground leases, and capital planning."
+
+# Investment & Planning Horizons Grounded in IPCC AR6 Milestones
+horizons:
+  - year: 2030
+    default_slr_scenario: "slr_0_5"
+    focus: "Immediate loan tenor / credit review"
+  - year: 2050
+    default_slr_scenario: "slr_1_0"
+    focus: "30-year commercial mortgage and infrastructure payback window"
+  - year: 2070
+    default_slr_scenario: "slr_1_5"
+    focus: "Long-term REIT holding / asset repositioning"
+  - year: 2100
+    default_slr_scenario: "slr_2_0"
+    focus: "Perpetual ground lease / terminal collateral resilience"
+
+# Hydrologic Connectivity Inundation Parameters (Section 11)
+inundation_engine:
+  connectivity_mode: "8_way"  # Options: 4_way, 8_way
+  require_ocean_seed: true
+  min_flooded_pixels: 5
+
+# Road Passability & Network Disruption Model (Section 19)
+road_passability:
+  light_flood_depth_threshold_m: 0.10   # 10 cm: Speed reduced by 50%
+  light_flood_speed_penalty: 0.50
+  severe_flood_depth_threshold_m: 0.30  # 30 cm: Impassable to passenger vehicles, speed reduced by 85%
+  severe_flood_speed_penalty: 0.15
+  closure_depth_threshold_m: 0.50       # 50 cm: Full road closure (edge disabled in graph)
