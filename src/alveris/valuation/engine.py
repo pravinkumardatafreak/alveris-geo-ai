@@ -42,6 +42,9 @@ class ValuationDeductions(BaseModel):
     environmental_discount_inr: float = Field(
         ..., ge=0.0, description="Discount for soil salinization and vegetative loss (INR)."
     )
+    cadastral_title_haircut_inr: float = Field(
+        0.0, ge=0.0, description="Deduction for legal boundary uncertainty and encroachment (INR)."
+    )
     total_haircut_inr: float = Field(
         ..., ge=0.0, description="Total aggregated downside financial deduction (INR)."
     )
@@ -166,7 +169,8 @@ def _build_waterfall_table(
     t1 = baseline_val - deductions.inundation_loss_inr
     t2 = t1 - deductions.accessibility_penalty_inr
     t3 = t2 - deductions.subsidence_capex_reserve_inr
-    return [
+    t4 = t3 - deductions.environmental_discount_inr
+    waterfall = [
         {"step": "Baseline Value", "impact": baseline_val, "total": baseline_val},
         {"step": "(-) Inundation Loss", "impact": -deductions.inundation_loss_inr, "total": t1},
         {
@@ -182,10 +186,17 @@ def _build_waterfall_table(
         {
             "step": "(-) Eco Discount",
             "impact": -deductions.environmental_discount_inr,
-            "total": final_val,
+            "total": t4,
         },
-        {"step": "(=) Adjusted Value", "impact": final_val, "total": final_val},
     ]
+    if deductions.cadastral_title_haircut_inr > 0.0:
+        waterfall.append({
+            "step": "(-) Title/Cadastre Risk",
+            "impact": -deductions.cadastral_title_haircut_inr,
+            "total": final_val,
+        })
+    waterfall.append({"step": "(=) Adjusted Value", "impact": final_val, "total": final_val})
+    return waterfall
 
 
 def _build_valuation_lineage(scenario_id: str) -> DerivedFeatureLineage:
@@ -194,28 +205,33 @@ def _build_valuation_lineage(scenario_id: str) -> DerivedFeatureLineage:
         feature_name=f"climate_adjusted_valuation_{scenario_id}",
         source_dataset_ids=["inundation_model", "insar_vlm", "sentinel2_l2a", "road_network"],
         processing_method="four_pillar_discount_waterfall_and_climate_var",
-        formula="Adjusted = Baseline - min(Cap, Inundation + Access + Subsidence + Environment)",
+        formula="Adjusted = Baseline - min(Cap, Inundation + Access + Subsidence + Environment + Cadastre)",
         units="INR",
         scenario_id=scenario_id,
         confidence=0.91,
         limitations=[
-            "Valuation represents physical risk discounts; excludes macroeconomic inflation.",
+            "Valuation represents physical and title risk discounts; excludes macroeconomic inflation.",
             "Elasticity parameters calibrated per configs/valuation.yml.",
+            "Incorporates UN SDG 1.4.2 cadastral boundary uncertainty haircut.",
         ],
     )
 
 
 def _compute_all_deductions(
-    base_val: float, hazards: PhysicalHazardInputs, cfg: ValuationModelConfig
+    base_val: float,
+    hazards: PhysicalHazardInputs,
+    cfg: ValuationModelConfig,
+    cadastral_haircut_rate: float = 0.0,
 ) -> tuple[ValuationDeductions, float, float]:
     """Calculate individual financial deductions and cap aggregate haircut."""
     inund = _compute_inundation_deduction(base_val, hazards.inundation, cfg.land_loss_elasticity)
     access = _compute_accessibility_deduction(base_val, hazards.network, cfg)
     sub = _compute_subsidence_deduction(base_val, hazards.subsidence)
     env = _compute_environmental_deduction(base_val, hazards.environment)
+    title = base_val * max(0.0, float(cadastral_haircut_rate))
 
     max_cut = base_val * (cfg.max_haircut_cap_percent / 100.0)
-    final_cut = min(max_cut, inund + access + sub + env)
+    final_cut = min(max_cut, inund + access + sub + env + title)
     adj_val = max(0.0, base_val - final_cut)
 
     deductions = ValuationDeductions(
@@ -223,6 +239,7 @@ def _compute_all_deductions(
         accessibility_penalty_inr=round(access, 2),
         subsidence_capex_reserve_inr=round(sub, 2),
         environmental_discount_inr=round(env, 2),
+        cadastral_title_haircut_inr=round(title, 2),
         total_haircut_inr=round(final_cut, 2),
         total_haircut_percent=round((final_cut / base_val) * 100.0, 2),
     )
@@ -233,12 +250,15 @@ def evaluate_climate_valuation(
     baseline_market_value_inr: float,
     hazards: PhysicalHazardInputs,
     config: ValuationModelConfig | None = None,
+    cadastral_haircut_rate: float = 0.0,
 ) -> ClimateAdjustedValuation:
     """Compute climate-adjusted market valuation, haircut waterfall, and Climate VaR."""
     cfg = config or ValuationModelConfig()
     base_val = max(1.0, baseline_market_value_inr)
 
-    deductions, final_haircut, adjusted_val = _compute_all_deductions(base_val, hazards, cfg)
+    deductions, final_haircut, adjusted_val = _compute_all_deductions(
+        base_val, hazards, cfg, cadastral_haircut_rate=cadastral_haircut_rate
+    )
 
     ranges = ValuationRange(
         conservative_value_inr=round(adjusted_val * 0.88, 2),

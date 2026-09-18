@@ -5,6 +5,7 @@ from alveris.models.multispectral_cnn import (
     MultiSpectralCNN,
     ZoningVerificationResult,
     classify_parcel_zoning,
+    predict_with_bayesian_uncertainty,
 )
 
 __all__ = [
@@ -12,4 +13,5 @@ __all__ = [
     "MultiSpectralCNN",
     "ZoningVerificationResult",
     "classify_parcel_zoning",
+    "predict_with_bayesian_uncertainty",
 ]

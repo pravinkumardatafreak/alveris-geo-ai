@@ -88,3 +88,58 @@ To maintain scientific integrity and comply with Section 45 of the Master Specif
 1. **Screening Model Status**: ALVERIS is a decision-support and screening platform. It does not replace site-specific geotechnical engineering, hydrodynamic modeling (e.g. ADCIRC, SWAN), or licensed commercial property appraisals.
 2. **Datum Warning**: Where local vertical tidal datum conversions (e.g. LAT to MSL to EGM2008 geoid) are approximated, outputs are explicitly flagged as `PRELIMINARY_SCREENING` with `Confidence = Medium`.
 3. **No Definitive Soil Degradation**: Satellite vegetation stress (NDVI/NDMI/NDRE anomalies) indicates vegetative and environmental stress, but does not conclusively prove specific soil chemical degradation without in-situ soil cores.
+
+---
+
+## 5. Earth Observation & Deep Learning for UN Sustainable Development Goals (IEEE GRSM 2022)
+
+ALVERIS incorporates methodological foundations from:
+> **Persello, C., Tolpekin, V. A., Bergado, J. R., de By, R. A., Gevaert, C. M., Kada, M., Koeva, M., Kuffer, M., Liu, P., Nex, F., Oude Elberink, S., Schwarz, B. C., Wegner, J. D., & Camps-Valls, G. (2022).**  
+> *"Deep Learning and Earth Observation to Support the Sustainable Development Goals: Current Approaches, Open Challenges, and Future Opportunities."*  
+> **IEEE Geoscience and Remote Sensing Magazine (GRSM)**, 10(2), 172–200. arXiv:2112.11367.
+
+### 5.1 Bayesian Uncertainty Quantification & Out-of-Distribution (OOD) Detection
+Standard deep learning classifiers in Earth Observation output overconfident softmax probabilities that fail under atmospheric attenuation, sensor anomalies, and geographic domain shifts. ALVERIS adopts the **Monte Carlo Dropout Bayesian approximation** (Gal & Ghahramani, 2016; Persello et al., Section V):
+
+During inference, dropout layers remain active with rate $p=0.20$. By performing $T=30$ stochastic forward passes with randomly sampled network weight configurations $\hat{W}_t \sim q(W)$, we obtain an empirical predictive distribution:
+
+$$\mu_c(x) = \frac{1}{T} \sum_{t=1}^T \text{Softmax}\left(f^{\hat{W}_t}(x)\right)_c$$
+
+ALVERIS decomposes predictive variance into two distinct uncertainty regimes:
+
+1. **Epistemic Uncertainty (Model / Knowledge Uncertainty)**:
+   Measures parameter uncertainty and unfamiliarity with the input data distribution. High epistemic variance signals **Out-of-Distribution (OOD)** conditions:
+   $$\sigma^2_{\text{epistemic}}(x) = \frac{1}{C} \sum_{c=1}^C \frac{1}{T} \sum_{t=1}^T \left(\hat{p}_{t, c}(x) - \mu_c(x)\right)^2$$
+   When $\sigma^2_{\text{epistemic}} > 0.025$, ALVERIS flags the parcel as **Out-of-Distribution (OOD)**, preventing automated underwriting on unreliable classifications.
+
+2. **Aleatoric Uncertainty (Observation / Data Noise)**:
+   Captures irreducible sensor noise, atmospheric haze, and mixed-pixel boundaries via predictive Shannon entropy:
+   $$H(x) = - \sum_{c=1}^C \mu_c(x) \log \left(\mu_c(x) + \epsilon\right)$$
+
+### 5.2 Cadastral Boundary Adjudication & Title Risk Haircuts (SDG 1.4.2 & its4land)
+Target 1.4.2 of the UN Sustainable Development Goals mandates measuring the proportion of the adult population with secure tenure rights to land. In rapid urbanization zones, informal subdivisions, wall shifts, and unrecorded physical encroachments create substantial legal and capital risks.
+
+Drawing on the European Commission Horizon 2020 **its4land** project (Koeva et al.; Persello et al., Section IV), ALVERIS contrasts deed/cadastral legal geometries ($\mathcal{P}_{\text{legal}}$) against AI-extracted physical boundaries ($\mathcal{P}_{\text{observed}}$):
+
+1. **Boundary Intersection over Union (IoU)**:
+   $$\text{Boundary IoU} = \frac{\text{Area}(\mathcal{P}_{\text{legal}} \cap \mathcal{P}_{\text{observed}})}{\text{Area}(\mathcal{P}_{\text{legal}} \cup \mathcal{P}_{\text{observed}})}$$
+
+2. **Mean Boundary Displacement ($\bar{d}$)**:
+   Evaluated using symmetric contour buffer differentials between deed lines and physical fence/wall lines.
+
+3. **Title Risk Haircut in Financial Underwriting**:
+   When mean displacement exceeds the surveying tolerance ($d > 0.5\text{m}$), ALVERIS calculates an unencumbered legal title haircut:
+   $$\Delta V_{\text{Title}} = \text{Area}_{\text{encroached}} \times \text{BaseRate}_{\text{INR/m}^2} \times \left(1.0 + \lambda_{\text{litigation}}\right)$$
+   Where $\lambda_{\text{litigation}} = 0.20$ represents legal defense and boundary rectification escrow reserves.
+
+### 5.3 Multi-Goal Sustainable Development Matrix & ESG Compliance
+ALVERIS aligns physical climate modeling directly to the UN SDG Global Indicator Framework:
+
+| UN SDG Target | Global Indicator | Physical Hazard Mapping in ALVERIS | Underwriting & ESG Threshold |
+|---|---|---|---|
+| **SDG 1.4.2** | Equal Rights to Economic Resources & Land Tenure | Cadastral Boundary IoU & its4land Adjudication | $\text{IoU} \ge 90\%$, Zero Physical Encroachment |
+| **SDG 11.5.1** | Disaster Risk Reduction & Resilient Human Settlements | Connected Inundation Area & Arterial Road Isolation | Vehicle Egress Maintained ($< 0.30\text{m}$ stall depth) |
+| **SDG 13.1.1** | Adaptive Capacity to Climate-Related Hazards | Multi-Decadal Sea Level Rise & InSAR Subsidence Trajectory | 2050/2100 Sea Level & Subsidence Acceleration Modeling |
+| **SDG 15.3.1** | Land Degradation Neutrality (LDN) | Sentinel-2 Red-Edge (NDRE) Vegetative Salinization Anomaly | Composite Stress Score $< 40/100$ |
+
+These indicators drive automated classification under **EU SFDR Article 8 / Article 9** eligibility and verify green covenant compliance for green bond issuance.

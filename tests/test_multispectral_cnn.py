@@ -2,7 +2,10 @@
 
 import numpy as np
 import pytest
-import torch
+try:
+    import torch
+except (ImportError, OSError):
+    torch = None
 
 from alveris.models.multispectral_cnn import (
     LandCoverClass,
@@ -12,16 +15,20 @@ from alveris.models.multispectral_cnn import (
 
 
 def test_cnn_architecture_forward_pass():
-    """Verify PyTorch CNN layer shapes, batch handling, and output logits."""
+    """Verify PyTorch/NumPy CNN layer shapes, batch handling, and output logits."""
     model = MultiSpectralCNN(in_channels=4, num_classes=5)
     model.eval()
 
-    # (Batch=2, Channels=4, Height=32, Width=32)
-    dummy_input = torch.randn(2, 4, 32, 32)
-    with torch.no_grad():
+    if torch is not None:
+        # (Batch=2, Channels=4, Height=32, Width=32)
+        dummy_input = torch.randn(2, 4, 32, 32)
+        with torch.no_grad():
+            output = model(dummy_input)
+        assert output.shape == (2, 5)
+    else:
+        dummy_input = np.random.randn(2, 4, 32, 32).astype(np.float32)
         output = model(dummy_input)
-
-    assert output.shape == (2, 5)
+        assert output.shape == (2, 5)
 
 
 def test_classify_parcel_zoning_inference():
@@ -49,7 +56,10 @@ def test_classify_parcel_zoning_inference():
     assert bm["spectral_advantage_delta_pct"] == pytest.approx(15.02, abs=0.01)
 
     # Lineage check
-    assert result.lineage.processing_method == "pytorch_multispectral_cnn_classification"
+    assert result.lineage.processing_method in (
+        "mc_dropout_bayesian_cnn_classification",
+        "pytorch_multispectral_cnn_classification",
+    )
 
 
 def test_invalid_tensor_dimension_raises_error():

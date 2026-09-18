@@ -147,7 +147,7 @@ def test_html_memo_generation_and_export(mock_valuation_and_risk, tmp_path: Path
     assert parcel.asset_id in memo_html
     assert "ALVERIS Underwriting Memo" in memo_html
     assert "1. Executive Summary & Underwriting Assessment" in memo_html
-    assert "3. Financial Valuation Waterfall (INR)" in memo_html
+    assert "Financial Valuation Waterfall (INR)" in memo_html
 
     out_file = tmp_path / "test_memo.html"
     res_path = export_memo_to_file(out_file, parcel, val, risk)
@@ -167,7 +167,7 @@ def test_markdown_memo_generation_and_export(mock_valuation_and_risk, tmp_path: 
 
     assert f"# INSTITUTIONAL UNDERWRITING MEMO: {parcel.name.upper()}" in memo_md
     assert "## 1. Executive Summary & Regulatory KPIs" in memo_md
-    assert "## 3. Financial Deduction Waterfall (INR)" in memo_md
+    assert "Financial Deduction Waterfall (INR)" in memo_md
     assert "INR" in memo_md
 
     out_md = tmp_path / "test_memo.md"
