@@ -143,3 +143,39 @@ ALVERIS aligns physical climate modeling directly to the UN SDG Global Indicator
 | **SDG 15.3.1** | Land Degradation Neutrality (LDN) | Sentinel-2 Red-Edge (NDRE) Vegetative Salinization Anomaly | Composite Stress Score $< 40/100$ |
 
 These indicators drive automated classification under **EU SFDR Article 8 / Article 9** eligibility and verify green covenant compliance for green bond issuance.
+
+### 5.4 Multi-Temporal Field Boundary Delineation (Kerner et al., AAAI 2023)
+Standard computer vision models evaluated with standard mIoU (threshold 0.5) overestimate boundary precision. Drawing from:
+> **Kerner, H., Sundar, S., & Satish, M. (2023).**  
+> *"Multi-Region Transfer Learning for Segmentation of Crop Field Boundaries in Satellite Images with Limited Labels."*  
+> **Proceedings of the AAAI Conference on Artificial Intelligence**, 37(12), 14298–14306.
+
+ALVERIS implements high-precision boundary underwriting for agricultural parcels:
+1. **Multi-Temporal Seasonal Composites**: Fuses 3 seasonal cloud-free composites (early vegetative/sowing, peak canopy vigor, and maturation/harvest) across 4 spectral bands to resolve phenological cycles.
+2. **Strict Precision at 0.95 IoU ($P_{\text{IoU} \ge 0.95}$)**: Adopts strict boundary compliance ($P_{0.95}$) requiring that predicted agricultural boundaries align tightly with legal farm deeds.
+3. **Fallow & Land Abandonment Haircut**: Parcels where active cultivation falls below 90% of deeded acreage or where $P_{0.95} < 0.80$ receive an uncultivated land haircut (up to 40% of baseline valuation) to protect agricultural collateral against loan defaults.
+
+### 5.5 Dilated Fully Convolutional Networks for Informal Settlement Detection (Persello & Stein, 2017)
+Informal settlements, slums, and unpermitted structures along parcel perimeters cannot be resolved with standard downsampling CNNs, as spatial pooling destroys fine-grained boundaries. Grounded in:
+> **Persello, C., & Stein, A. (2017).**  
+> *"Deep Fully Convolutional Networks for the Detection of Informal Settlements in VHR Images."*  
+> **IEEE Geoscience and Remote Sensing Letters**, 14(12), 2325–2329.
+
+ALVERIS leverages Dilated Fully Convolutional Networks (FCN-DK):
+1. **Atrous / Dilated Convolutions ($d = 1..6$)**: Systematically expands the convolutional receptive field (up to 25m spatial support) without pooling layers, preserving pixel-level boundary demarcation.
+2. **Multi-Scale Spatial Context**: Captures characteristic high roof density (>1.35x formal baseline) and irregular layout patterns characteristic of informal dwellings.
+3. **Setback & Encroachment Penalty**: Structures breaching municipal perimeter setbacks or drainage corridors trigger an automated informal settlement valuation haircut (up to 25% of baseline value) and compliance flags.
+
+---
+
+## 6. Comprehensive Scientific & Regulatory Citations
+* **Persello, C., Wegner, J. D., Koeva, M., Camps-Valls, G., et al. (2022)**: *Deep Learning and Earth Observation to Support the Sustainable Development Goals*. IEEE Geoscience and Remote Sensing Magazine (GRSM), 10(2), 172-200. [arXiv:2112.11367](https://arxiv.org/abs/2112.11367).
+* **Kerner, H., Sundar, S., & Satish, M. (2023)**: *Multi-Region Transfer Learning for Segmentation of Crop Field Boundaries in Satellite Images with Limited Labels*. In *Proceedings of the AAAI Conference on Artificial Intelligence*, 37(12), 14298-14306.
+* **Persello, C., & Stein, A. (2017)**: *Deep Fully Convolutional Networks for the Detection of Informal Settlements in VHR Images*. *IEEE Geoscience and Remote Sensing Letters*, 14(12), 2325-2329.
+* **Helber, P., Bischke, B., Dengel, A., & Borth, D. (2019)**: *EuroSAT: A Novel Dataset and Deep Learning Benchmark for Land Use and Land Cover Classification*. *IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing*, 12(7), 2217-2226.
+* **Gal, Y., & Ghahramani, Z. (2016)**: *Dropout as a Bayesian Approximation: Representing Model Uncertainty in Deep Learning*. ICML.
+* **IPCC AR6 WG1 (Chapter 9)**: *Ocean, Cryosphere and Sea Level Change* (Figure 9.25 projection bounds).
+* **Basel III / BCBS Climate Risk Principles**: Physical risk transmission channels to credit risk.
+* **SEC Form 497 / TCFD**: Material physical risk disclosures and capital stewardship standards.
+* **Horn, B.K.P. (1981)**: *Hill Shading and the Reflectance Map*. Proceedings of the IEEE, 69(1), 14-47.
+

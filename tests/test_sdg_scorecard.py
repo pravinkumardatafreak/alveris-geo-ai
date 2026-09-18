@@ -2,12 +2,16 @@
 
 import pytest
 
+from alveris.core.lineage import DerivedFeatureLineage
 from alveris.inundation.engine import InundationScenarioResult
 from alveris.network.resilience import NetworkResilienceMetrics
 from alveris.reporting.sdg_esg import UN_SDG_Scorecard, compute_un_sdg_scorecard
-from alveris.core.lineage import DerivedFeatureLineage
 from alveris.sensors.multispectral import EnvironmentalStressMetrics, SpectralIndexStats
-from alveris.subsidence.engine import SettlementRiskLevel, SubsidenceMetrics, SubsidenceProjection
+from alveris.subsidence.engine import (
+    SettlementRiskLevel,
+    SubsidenceMetrics,
+    SubsidenceProjection,
+)
 
 
 @pytest.fixture

@@ -1,7 +1,6 @@
 """Tests for Cadastral Boundary Adjudication and UN SDG 1.4.2 Compliance."""
 
 import pytest
-from shapely.geometry import Polygon
 
 from alveris.ingestion.cadastre import (
     CadastralAdjudicationResult,

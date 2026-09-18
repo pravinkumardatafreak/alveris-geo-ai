@@ -153,7 +153,7 @@ def generate_html_underwriting_memo(
         <div style="background: #f1f5f9; padding: 14px; border-radius: 6px; margin: 12px 0; border-left: 4px solid #0284c7;">
             <strong>AI Multispectral Zoning & Bayesian Uncertainty Verification:</strong><br>
             <span style="font-size: 0.9rem; color: #334155;">
-                Sentinel-2 13-band tensor classifier achieved <strong>95.98% accuracy</strong> (+15.02% spectral advantage over 3-band RGB baseline).<br>
+                Sentinel-2 13-band surface reflectance tensor (Coastal, Red-Edge, NIR, SWIR) operationalized with FCN dilated convolutions.<br>
                 <strong>Bayesian MC Dropout Reliability:</strong> {ctx.get('uncertainty_rating', 'High Confidence')} |
                 <strong>Epistemic Variance:</strong> {ctx.get('epistemic_uncertainty', 0.0042):.5f} |
                 <strong>Aleatoric Entropy:</strong> {ctx.get('aleatoric_uncertainty', 0.182):.3f}

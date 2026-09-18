@@ -2,7 +2,7 @@
 
 [![CI - Pytest & Static Analysis](https://img.shields.io/badge/CI-Passing-brightgreen?style=flat-square&logo=githubactions)](.github/workflows/ci.yml)
 [![Pylint Rating](https://img.shields.io/badge/Pylint-10.00%2F10-brightgreen?style=flat-square&logo=python)](pyproject.toml)
-[![Test Coverage](https://img.shields.io/badge/Tests-55%20Passed-blue?style=flat-square&logo=pytest)](tests/)
+[![Test Coverage](https://img.shields.io/badge/Tests-59%20Passed-blue?style=flat-square&logo=pytest)](tests/)
 [![Bayesian Uncertainty](https://img.shields.io/badge/Bayesian%20AI-MC%20Dropout%20%7C%20OOD%20Detection-teal?style=flat-square)](#1-bayesian-uncertainty-quantification--ood-detection)
 [![Cadastral Adjudication](https://img.shields.io/badge/Cadastre-its4land%20%7C%20SDG%201.4.2-orange?style=flat-square)](#2-cadastral-boundary-adjudication--title-risk-haircuts)
 [![UN SDG & ESG](https://img.shields.io/badge/UN%20SDG-Scorecard%20%7C%20EU%20SFDR-green?style=flat-square)](#3-un-sustainable-development-goals-sdg--esg-scorecard)
@@ -64,12 +64,13 @@ flowchart TD
 * Incorporates **Monte Carlo Dropout** (Gal & Ghahramani, 2016; Persello et al., IEEE GRSM 2022) with $T=30$ stochastic forward passes.
 * Disentangles **Epistemic Uncertainty** (model/parameter variance) from **Aleatoric Uncertainty** (predictive Shannon entropy of sensor noise / mixed pixels).
 * **Out-of-Distribution (OOD) Detection Gate**: Automatically flags anomalies and domain shifts ($\sigma^2_{\text{epistemic}} > 0.025$) to prevent automated underwriting on unfamiliar geographic biomes.
-* **13-Band Multispectral Advantage**: Uses Sentinel-2 L2A BOA reflectance (Coastal Aerosol, Red Edge, NIR, SWIR), achieving **95.98% accuracy (+15.02% over 3-band RGB)**.
+* **13-Band Multispectral Engine**: Leverages Sentinel-2 L2A BOA reflectance (Coastal Aerosol, Red Edge B05, NIR B08, SWIR B11/B12) with dilated convolutions ($d=2$) to maintain 10m spatial resolution without lossy downsampling.
 
-### 2. Cadastral Boundary Adjudication & Title Risk Haircuts
-* Implements the **its4land automated boundary adjudication methodology** (Persello et al., Section IV; UN SDG 1.4.2).
-* Contrasts legal deed boundaries against AI-extracted physical demarcation lines to compute **Boundary Intersection over Union (IoU)** and physical displacement jitter.
-* Injects an **Unencumbered Legal Title Haircut** with litigation reserve scaling ($\lambda_{\text{litigation}} = 0.20$) into the financial valuation waterfall.
+### 2. Cadastral Boundary Adjudication, Crop Delineation & Informal Settlement Detection
+* **its4land Automated Boundary Adjudication** (Persello et al., Section IV; UN SDG 1.4.2): Contrasts legal deed boundaries against AI-extracted physical demarcation lines to compute Boundary IoU and physical displacement jitter, injecting an **Unencumbered Legal Title Haircut** with litigation reserve scaling ($\lambda_{\text{litigation}} = 0.20$).
+* **Multi-Temporal Field Boundary Adjudication (Kerner et al., AAAI 2023)**: Evaluates multi-seasonal composites (sowing, peak vegetative vigor, maturation) with strict **Precision at 0.95 IoU ($P_{\text{IoU} \ge 0.95}$)** to verify active farm acreage and penalize uncultivated or abandoned fallow land with valuation haircuts.
+* **Dilated FCN Informal Settlement Encroachment (Persello & Stein, IEEE GRSL 2017)**: Leverages dilated convolutional receptive fields ($d=1..6$, 25m spatial support) without downsampling pooling to detect dense, irregular informal settlements/slums and perimeter setback encroachments.
+
 
 ### 3. UN Sustainable Development Goals (SDG) & ESG Scorecard
 * Evaluates 4 core UN SDG Target Indicators grounded in Earth Observation telemetry:
@@ -131,7 +132,7 @@ uv sync --extra dev
 
 ### 2. Run Test Suite & Quality Audit Gates
 ```bash
-# Run all 55 comprehensive unit tests
+# Run all 59 comprehensive unit tests
 uv run --extra dev pytest
 
 # Verify 10.00/10 code quality
@@ -173,7 +174,7 @@ alveris/
 │   ├── reporting/          # UN SDG & ESG scorecard, dark Plotly charts, HTML/MD memos
 │   ├── cli.py              # Production Click CLI interface
 │   └── app.py              # Streamlit institutional decision cockpit (6 technical tabs)
-├── tests/                  # 55 comprehensive unit tests (100% passing)
+├── tests/                  # 59 comprehensive unit tests (100% passing)
 ├── docs/                   # Scientific & institutional basis documentation (IPCC AR6, IEEE GRSM, SEC)
 ├── configs/                # Spatial, scenario, and sensor configuration YAMLs
 ├── data/sample/            # Standardized sample parcel GeoJSON fixtures
@@ -185,6 +186,9 @@ alveris/
 
 ## 📜 Regulatory Standards & Scientific Citations
 * **Persello, C., Wegner, J. D., Koeva, M., Camps-Valls, G., et al. (2022)**: *Deep Learning and Earth Observation to Support the Sustainable Development Goals*. IEEE Geoscience and Remote Sensing Magazine (GRSM), 10(2), 172-200. [arXiv:2112.11367](https://arxiv.org/abs/2112.11367).
+* **Kerner, H., Sundar, S., & Satish, M. (2023)**: *Multi-Region Transfer Learning for Segmentation of Crop Field Boundaries in Satellite Images with Limited Labels*. In *Proceedings of the AAAI Conference on Artificial Intelligence*, 37(12), 14298-14306.
+* **Persello, C., & Stein, A. (2017)**: *Deep Fully Convolutional Networks for the Detection of Informal Settlements in VHR Images*. *IEEE Geoscience and Remote Sensing Letters*, 14(12), 2325-2329.
+* **Helber, P., Bischke, B., Dengel, A., & Borth, D. (2019)**: *EuroSAT: A Novel Dataset and Deep Learning Benchmark for Land Use and Land Cover Classification*. *IEEE JSTARS*, 12(7), 2217-2226.
 * **Gal, Y., & Ghahramani, Z. (2016)**: *Dropout as a Bayesian Approximation: Representing Model Uncertainty in Deep Learning*. ICML.
 * **IPCC AR6 WG1 (Chapter 9)**: *Ocean, Cryosphere and Sea Level Change* (Figure 9.25 projection bounds).
 * **Basel III / BCBS Climate Risk Principles**: Physical risk transmission channels to credit risk (LTV deterioration, collateral haircuts).

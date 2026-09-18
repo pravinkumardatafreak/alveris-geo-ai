@@ -2,6 +2,7 @@
 
 import numpy as np
 import pytest
+
 try:
     import torch
 except (ImportError, OSError):
@@ -49,11 +50,17 @@ def test_classify_parcel_zoning_inference():
     total_prob = sum(result.class_probabilities.values())
     assert total_prob == pytest.approx(1.0, abs=0.01)
 
-    # Benchmark metadata check
+    # Spectral tensor metadata check
     bm = result.rgb_vs_multispectral_benchmark
-    assert bm["rgb_3band_baseline_accuracy_pct"] == 80.96
-    assert bm["multispectral_tensor_accuracy_pct"] == 95.98
-    assert bm["spectral_advantage_delta_pct"] == pytest.approx(15.02, abs=0.01)
+    assert bm["input_channels"] == 4
+    assert bm["red_edge_active"] is True
+    assert bm["swir_absorption_active"] is True
+    assert bm["dilated_convolutions"] is True
+
+    sm = result.spectral_tensor_metadata
+    assert sm["sensor"] == "Sentinel-2 Level-2A"
+    assert sm["bayesian_mc_passes"] == 30
+    assert "FCN-DK" in sm["spatial_dilation_mode"]
 
     # Lineage check
     assert result.lineage.processing_method in (

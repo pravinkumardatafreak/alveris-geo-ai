@@ -14,6 +14,7 @@ from typing import Any
 import numpy as np
 import streamlit as st
 
+from alveris.ingestion.cadastre import adjudicate_cadastral_boundaries
 from alveris.ingestion.parcel import ParcelAsset, load_parcel_from_geojson
 from alveris.inundation.engine import (
     ConnectedInundationEngine,
@@ -36,18 +37,17 @@ from alveris.reporting.charts import (
     create_zoning_confidence_chart,
 )
 from alveris.reporting.map_layers import MapLayerOptions, create_alveris_deck_map
-from alveris.ingestion.cadastre import adjudicate_cadastral_boundaries
 from alveris.reporting.memo import (
     generate_html_underwriting_memo,
     generate_markdown_underwriting_memo,
 )
-from alveris.reporting.sdg_esg import compute_un_sdg_scorecard
 from alveris.reporting.rasters import (
     plot_dem_elevation_raster,
     plot_insar_subsidence_surface,
     plot_sentinel2_false_color_cir,
     plot_slope_gradient_raster,
 )
+from alveris.reporting.sdg_esg import compute_un_sdg_scorecard
 from alveris.risk.scoring import CompositeRiskAssessment, evaluate_composite_risk
 from alveris.sample_data import (
     generate_ocean_seed_mask,
@@ -415,8 +415,8 @@ def _render_deep_dive_tabs(ctx: DeepDiveContext) -> None:
             st.progress(int(env.moisture_stress_score), text="Canopy Moisture Deficit")
             st.progress(int(env.salinization_risk_score), text="Root-Zone Salinization Risk")
             st.markdown(
-                "> **Spectral Advantage**: 13-band Sentinel-2 tensors jump accuracy from "
-                "**80.96% with RGB to 95.98% (+15.02%)** via Red-Edge & SWIR bands."
+                "> **Spectral Sensitivity**: 13-band Sentinel-2 tensors exploit Red-Edge (B05) "
+                "and SWIR (B11/B12) absorption to detect sub-canopy stress and impervious surfaces."
             )
             if "spectral_tensor" in ctx.raster_grids:
                 st.write("### Sentinel-2 False-Color Infrared (CIR)")
@@ -522,7 +522,8 @@ def _render_deep_dive_tabs(ctx: DeepDiveContext) -> None:
 
         sc_col1, sc_col2, sc_col3 = st.columns(3)
         with sc_col1:
-            st.metric("Composite SDG Index", f"{cad_res.cadastral_certainty_score * 0.25 + 60.0:.1f} / 100")
+            score_val = sdg_card.composite_score if sdg_card else (cad_res.cadastral_certainty_score * 0.25 + 60.0)
+            st.metric("Composite SDG Index", f"{score_val:.1f} / 100")
         with sc_col2:
             st.metric("ESG Taxonomy Classification", "EU SFDR Article 8 (Light Green)")
         with sc_col3:

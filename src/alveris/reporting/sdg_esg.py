@@ -11,7 +11,6 @@ Maps multi-sensor physical satellite observations into 4 core UN SDG Indicators:
 4. SDG 15.3.1: Life on Land & Vegetative Land Degradation Neutrality (LDN)
 """
 
-from typing import Any
 from pydantic import BaseModel, Field
 
 from alveris.core.lineage import DerivedFeatureLineage
@@ -31,7 +30,7 @@ class SDGIndicatorScore(BaseModel):
     key_finding: str = Field(..., description="Concise physical finding grounded in Earth Observation.")
 
 
-class UN_SDG_Scorecard(BaseModel):
+class UN_SDG_Scorecard(BaseModel):  # noqa: N801
     """Institutional ESG & UN Sustainable Development Goals scorecard."""
 
     composite_sdg_index: float = Field(

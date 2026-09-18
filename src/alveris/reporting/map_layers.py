@@ -9,11 +9,11 @@ Implements presentation-grade cartographic rendering:
 
 from dataclasses import dataclass
 from typing import Any
+
 import pydeck as pdk
 
 from alveris.ingestion.parcel import ParcelAsset
 from alveris.inundation.engine import InundationScenarioResult
-
 
 CARTO_DARK_MAP_STYLE = "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
 

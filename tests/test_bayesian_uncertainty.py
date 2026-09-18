@@ -1,14 +1,13 @@
 """Tests for Monte Carlo Dropout Bayesian Uncertainty and OOD Detection."""
 
 import numpy as np
-import pytest
+
 try:
     import torch
 except (ImportError, OSError):
     torch = None
 
 from alveris.models.multispectral_cnn import (
-    LandCoverClass,
     MultiSpectralCNN,
     ZoningVerificationResult,
     classify_parcel_zoning,

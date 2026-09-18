@@ -7,10 +7,6 @@ import pytest
 from alveris.core.lineage import DerivedFeatureLineage
 from alveris.ingestion.parcel import load_parcel_from_geojson
 from alveris.inundation.engine import InundationScenarioResult
-from alveris.models.multispectral_cnn import (
-    LandCoverClass,
-    ZoningVerificationResult,
-)
 from alveris.network.resilience import NetworkResilienceMetrics
 from alveris.reporting.charts import (
     create_risk_pillar_chart,
@@ -197,6 +193,7 @@ def test_plotly_chart_generators(mock_valuation_and_risk):
     assert len(fig_comp.data) == 2
 
     import numpy as np
+
     from alveris.models.multispectral_cnn import classify_parcel_zoning
 
     tensor = np.zeros((4, 20, 20), dtype=np.float32)

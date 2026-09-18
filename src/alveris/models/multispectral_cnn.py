@@ -5,8 +5,10 @@ Implements Deep Learning integration for ALVERIS:
 - Leverages Red, Red-Edge (B05), Near-Infrared (B08), and Shortwave Infrared (B11 SWIR)
   bands to reliably distinguish industrial concrete/asphalt, residential roofs,
   cropland, water bodies, and bare/degraded soil.
-- Demonstrates the empirical accuracy jump from RGB-only (~80.96%) to multi-spectral
-  tensors (~95.98%) as highlighted in remote sensing research.
+- Demonstrates the spectral discriminative advantage of 13-band BOA surface reflectance
+  over 3-band RGB by capturing chlorophyll absorption and SWIR moisture signatures.
+- Employs Dilated Convolutions (Persello & Stein, IEEE GRSL 2017) to expand receptive field
+  without loss of spatial resolution.
 - Computes AI-verified land cover zoning consistency and parcel impervious surface fraction.
 """
 
@@ -85,9 +87,13 @@ class ZoningVerificationResult(BaseModel):
         "High Confidence",
         description="Institutional reliability tier: 'High Confidence', 'Moderate Uncertainty', or 'Out-of-Distribution (OOD)'.",
     )
-    rgb_vs_multispectral_benchmark: dict[str, float] = Field(
-        ...,
-        description="Benchmark comparison between 3-band RGB and multispectral tensors.",
+    spectral_tensor_metadata: dict[str, Any] = Field(
+        default_factory=dict,
+        description="Operational multispectral tensor configuration and Bayesian inference parameters.",
+    )
+    rgb_vs_multispectral_benchmark: dict[str, Any] = Field(
+        default_factory=dict,
+        description="Operational multispectral tensor attributes and spectral advantage characteristics.",
     )
     lineage: DerivedFeatureLineage = Field(
         ..., description="Data provenance tracing model architecture and input tensor."
@@ -95,14 +101,17 @@ class ZoningVerificationResult(BaseModel):
 
 
 class MultiSpectralCNN(_BaseModule):
-    """Lightweight Convolutional Neural Network with Spatial & Linear Monte Carlo Dropout.
+    """Convolutional Neural Network with Dilated Convolutions (FCN-DK) & Monte Carlo Dropout.
 
     Accepts (Batch, Channels, Height, Width) where Channels = 4 (Red, Red-Edge, NIR, SWIR1)
     or Channels = 13 (full Sentinel-2 Level-2A surface reflectance suite).
 
-    Incorporates Monte Carlo Dropout (Gal & Ghahramani, 2016) to provide Bayesian
-    uncertainty quantification per Persello et al. (IEEE GRSM 2022).
-    Includes a pure-NumPy execution fallback when PyTorch C++ runtimes are absent.
+    Incorporates:
+    - Monte Carlo Dropout (Gal & Ghahramani, 2016; Persello et al., IEEE GRSM 2022) for Bayesian
+      epistemic & aleatoric uncertainty quantification and Out-of-Distribution (OOD) detection.
+    - Dilated Convolutions (Persello & Stein, IEEE GRSL 2017) to expand the receptive field without
+      spatial downsampling loss, preserving fine boundary resolution.
+    - Dual execution engine: PyTorch hardware tensors with an automatic pure-NumPy fallback.
     """
 
     def __init__(self, in_channels: int = 4, num_classes: int = 5, dropout_p: float = 0.20) -> None:
@@ -118,8 +127,8 @@ class MultiSpectralCNN(_BaseModule):
                 nn.BatchNorm2d(16),
                 nn.ReLU(inplace=True),
                 nn.Dropout2d(p=dropout_p),
-                nn.MaxPool2d(2, 2),
-                nn.Conv2d(16, 32, kernel_size=3, padding=1),
+                # Dilated convolution (d=2) expands receptive field to 5x5 equivalent (Persello & Stein 2017)
+                nn.Conv2d(16, 32, kernel_size=3, dilation=2, padding=2),
                 nn.BatchNorm2d(32),
                 nn.ReLU(inplace=True),
                 nn.Dropout2d(p=dropout_p),
@@ -303,10 +312,21 @@ def classify_parcel_zoning(
         4,
     )
 
+    spectral_meta = {
+        "sensor": "Sentinel-2 Level-2A",
+        "input_channels": channels,
+        "spectral_bands": ["Red", "Red-Edge (B05)", "NIR (B08)", "SWIR1 (B11)"] if channels == 4 else [f"Band_{i+1}" for i in range(channels)],
+        "bayesian_mc_passes": 30 if enable_bayesian_uncertainty else 1,
+        "spatial_dilation_mode": "FCN-DK (d=2, Persello & Stein 2017)",
+        "dropout_rate": 0.20,
+    }
+
     benchmark = {
-        "rgb_3band_baseline_accuracy_pct": 80.96,
-        "multispectral_tensor_accuracy_pct": 95.98,
-        "spectral_advantage_delta_pct": 15.02,
+        "input_channels": channels,
+        "red_edge_active": True,
+        "swir_absorption_active": True,
+        "dilated_convolutions": True,
+        "bayesian_mc_dropout": enable_bayesian_uncertainty,
     }
 
     if is_ood:
@@ -326,6 +346,7 @@ def classify_parcel_zoning(
         aleatoric_uncertainty=round(aleatoric_ent, 4),
         is_out_of_distribution=is_ood,
         uncertainty_rating=uncertainty_tier,
+        spectral_tensor_metadata=spectral_meta,
         rgb_vs_multispectral_benchmark=benchmark,
         lineage=_build_model_lineage(channels),
     )

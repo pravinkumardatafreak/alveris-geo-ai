@@ -2,8 +2,6 @@
 
 from pathlib import Path
 
-import pytest
-
 from alveris.cli import create_parser, handle_assess, handle_gates, handle_version
 
 

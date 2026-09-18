@@ -1,7 +1,6 @@
 """Unit tests for Phase 4: Connected Inundation & SLR Engine."""
 
 import numpy as np
-import pytest
 
 from alveris.inundation.engine import (
     ConnectedInundationEngine,
