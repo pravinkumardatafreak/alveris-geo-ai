@@ -10,12 +10,14 @@ Verifies whether legal cadastral deed boundaries match visible physical boundari
 Flags legal title disputes, physical encroachment, and unadjudicated boundary slivers.
 """
 
+import geopandas as gpd
 import numpy as np
 from pydantic import BaseModel, Field
-from shapely.geometry import Polygon
+from shapely.geometry import Polygon, shape
 
 from alveris.core.lineage import DerivedFeatureLineage
 from alveris.ingestion.parcel import ParcelAsset
+
 
 
 class CadastralAdjudicationResult(BaseModel):
@@ -69,9 +71,6 @@ def adjudicate_cadastral_boundaries(
     if hasattr(parcel, "geometry_utm") and parcel.geometry_utm is not None:
         legal_geom: Polygon = parcel.geometry_utm
     else:
-        import geopandas as gpd
-        from shapely.geometry import shape
-
         geom_wgs = shape(parcel.geometry_geojson)
         gdf = gpd.GeoDataFrame(geometry=[geom_wgs], crs=parcel.source_crs)
         legal_geom = gdf.to_crs(parcel.utm_epsg).geometry.iloc[0]

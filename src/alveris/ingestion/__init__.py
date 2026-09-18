@@ -20,4 +20,3 @@ __all__ = [
     "detect_informal_settlement_encroachment",
     "load_parcel_from_geojson",
 ]
-

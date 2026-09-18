@@ -59,3 +59,21 @@ testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_functions = ["test_*"]
 addopts = "-v --strict-markers"
+
+[tool.pylint.main]
+fail-under = "10.0"
+
+[tool.pylint.format]
+max-line-length = 120
+
+[tool.pylint.messages_control]
+disable = [
+    "line-too-long",
+    "too-many-locals",
+    "too-many-instance-attributes",
+    "too-many-arguments",
+    "too-many-positional-arguments",
+    "invalid-name",
+    "duplicate-code",
+]
+
