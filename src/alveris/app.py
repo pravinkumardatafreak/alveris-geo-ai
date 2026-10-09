@@ -36,6 +36,9 @@ from alveris.reporting.charts import (
     create_valuation_waterfall_chart,
     create_zoning_confidence_chart,
 )
+from streamlit_folium import st_folium
+
+from alveris.reporting.folium_map import create_alveris_folium_map
 from alveris.reporting.map_layers import MapLayerOptions, create_alveris_deck_map
 from alveris.reporting.memo import (
     generate_html_underwriting_memo,
@@ -313,24 +316,42 @@ def _render_geospatial_cockpit(
     parcel: ParcelAsset,
     inundation: InundationScenarioResult,
     is_network_isolated: bool = False,
+    subsidence_rate_mm_yr: float = -8.5,
 ) -> None:
-    """Render interactive WebGL PyDeck map and direct physical hazard indicators."""
-    st.subheader("Interactive Geospatial Cockpit (WebGL Cartography)")
+    """Render interactive WebGL PyDeck & Leaflet/Folium multi-layer GIS maps."""
+    st.subheader("Interactive Geospatial Cockpit")
     col1, col2 = st.columns([3, 2])
     with col1:
-        c_m1, c_m2 = st.columns(2)
-        with c_m1:
-            show_flood = st.checkbox("Overlay 8-Way Flood Extent", value=True)
-        with c_m2:
-            show_roads = st.checkbox("Overlay Road Network Links", value=True)
+        tab_deck, tab_folium = st.tabs([
+            "🌐 WebGL PyDeck (3D Perspective)",
+            "🗺️ Leaflet / Folium (Multi-Layer GIS)",
+        ])
+        with tab_deck:
+            c_m1, c_m2 = st.columns(2)
+            with c_m1:
+                show_flood = st.checkbox("Overlay 8-Way Flood Extent", value=True, key="deck_flood")
+            with c_m2:
+                show_roads = st.checkbox("Overlay Road Network Links", value=True, key="deck_roads")
 
-        opts = MapLayerOptions(show_flood_extent=show_flood, show_road_network=show_roads)
-        deck = create_alveris_deck_map(parcel, inundation, is_network_isolated, opts)
-        st.pydeck_chart(deck, use_container_width=True)
-        st.caption(
-            f"**Centroid:** {parcel.centroid_wgs84[0]:.4f}°N, {parcel.centroid_wgs84[1]:.4f}°E | "
-            f"**UTM:** <code>{parcel.utm_epsg}</code> | **Basemap:** Carto DarkMatter WebGL"
-        )
+            opts = MapLayerOptions(show_flood_extent=show_flood, show_road_network=show_roads)
+            deck = create_alveris_deck_map(parcel, inundation, is_network_isolated, opts)
+            st.pydeck_chart(deck, use_container_width=True)
+            st.caption(
+                f"**Centroid:** {parcel.centroid_wgs84[0]:.4f}°N, {parcel.centroid_wgs84[1]:.4f}°E | "
+                f"**UTM:** <code>{parcel.utm_epsg}</code> | **Basemap:** Carto DarkMatter WebGL"
+            )
+        with tab_folium:
+            folium_map = create_alveris_folium_map(
+                parcel=parcel,
+                inundation=inundation,
+                subsidence_rate_mm_yr=subsidence_rate_mm_yr,
+                is_network_severed=is_network_isolated,
+            )
+            st_folium(folium_map, width="100%", height=420, returned_objects=[])
+            st.caption(
+                "**Interactive GIS Layers:** CartoDB DarkMatter · Esri Satellite · Cadastral Boundary · "
+                "InSAR PS Stations · Inundation Hazard · Road Arterials"
+            )
     with col2:
         st.write("### Hydrological Inundation Telemetry")
         m_col1, m_col2 = st.columns(2)
@@ -745,7 +766,7 @@ def main():
             res_a.valuation, res_b.valuation, res_a.risk, res_b.risk, labels=(label_a, label_b)
         )
 
-    _render_geospatial_cockpit(parcel, res_a.inundation, res_a.network.is_physically_isolated)
+    _render_geospatial_cockpit(parcel, res_a.inundation, res_a.network.is_physically_isolated, subsidence_rate_mm_yr=-res_a.subsidence.linear_rate_mm_yr if enable_sub else 0.0)
 
     ctx = DeepDiveContext(
         parcel=parcel,

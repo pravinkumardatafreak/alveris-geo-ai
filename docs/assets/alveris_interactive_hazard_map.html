@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_bc54e9815552d7705f0d6ad904d26101 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+    
+                    <style>
+                        .foliumtooltip {
+                            background-color: #0f172a; color: #f8fafc; font-size: 11px; padding: 6px; border-radius: 4px;
+                        }
+                       .foliumtooltip table{
+                            margin: auto;
+                        }
+                        .foliumtooltip tr{
+                            text-align: left;
+                        }
+                        .foliumtooltip th{
+                            padding: 2px; padding-right: 8px;
+                        }
+                    </style>
+            
+    <script src="https://cdn.jsdelivr.net/npm/leaflet.fullscreen@3.0.0/Control.FullScreen.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.fullscreen@3.0.0/Control.FullScreen.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-minimap/3.6.1/Control.MiniMap.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-minimap/3.6.1/Control.MiniMap.css"/>
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_bc54e9815552d7705f0d6ad904d26101" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_bc54e9815552d7705f0d6ad904d26101 = L.map(
+                "map_bc54e9815552d7705f0d6ad904d26101",
+                {
+                    center: [80.314, 13.2465],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 15,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+            L.control.scale().addTo(map_bc54e9815552d7705f0d6ad904d26101);
+
+            
+
+        
+    
+            var tile_layer_eabba079fdc16cd5302b60d1acf021db = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\u0027https://www.openstreetmap.org/copyright\u0027\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\u0027https://carto.com/attributions\u0027\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_eabba079fdc16cd5302b60d1acf021db.addTo(map_bc54e9815552d7705f0d6ad904d26101);
+        
+    
+            var tile_layer_698b31d87e74c58c7a80da9acb87943f = L.tileLayer(
+                "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+                {
+  "minZoom": 0,
+  "maxZoom": 18,
+  "maxNativeZoom": 18,
+  "noWrap": false,
+  "attribution": "Esri, Maxar, Earthstar Geographics",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_698b31d87e74c58c7a80da9acb87943f.addTo(map_bc54e9815552d7705f0d6ad904d26101);
+        
+    
+            var tile_layer_ea9f07b64226a9241c79153ac472cb5b = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_ea9f07b64226a9241c79153ac472cb5b.addTo(map_bc54e9815552d7705f0d6ad904d26101);
+        
+    
+            var feature_group_8c5b89f40a487075d14330e6758bd26d = L.featureGroup(
+                {
+}
+            );
+        
+    
+        function geo_json_fe422f94e12462bc165e988fc9bd1f7e_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#00ffcc", "fillColor": "#00ffcc", "fillOpacity": 0.22, "weight": 3};
+            }
+        }
+        function geo_json_fe422f94e12462bc165e988fc9bd1f7e_highlighter(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#ffffff", "fillColor": "#38bdf8", "fillOpacity": 0.45, "weight": 4};
+            }
+        }
+
+        function geo_json_fe422f94e12462bc165e988fc9bd1f7e_onEachFeature(feature, layer) {
+
+            layer.on({
+                mouseout: function(e) {
+                    if(typeof e.target.setStyle === "function"){
+                            geo_json_fe422f94e12462bc165e988fc9bd1f7e.resetStyle(e.target);
+                    }
+                },
+                mouseover: function(e) {
+                    if(typeof e.target.setStyle === "function"){
+                        const highlightStyle = geo_json_fe422f94e12462bc165e988fc9bd1f7e_highlighter(e.target.feature)
+                        e.target.setStyle(highlightStyle);
+                    }
+                },
+            });
+        };
+        var geo_json_fe422f94e12462bc165e988fc9bd1f7e = L.geoJson(null, {
+                onEachFeature: geo_json_fe422f94e12462bc165e988fc9bd1f7e_onEachFeature,
+            
+                style: geo_json_fe422f94e12462bc165e988fc9bd1f7e_styler,
+            ...{
+}
+        });
+
+        function geo_json_fe422f94e12462bc165e988fc9bd1f7e_add (data) {
+            geo_json_fe422f94e12462bc165e988fc9bd1f7e
+                .addData(data);
+        }
+            geo_json_fe422f94e12462bc165e988fc9bd1f7e_add({"bbox": [80.3125, 13.245, 80.3155, 13.248], "features": [{"bbox": [80.3125, 13.245, 80.3155, 13.248], "geometry": {"coordinates": [[[80.3125, 13.245], [80.3155, 13.245], [80.3155, 13.248], [80.3125, 13.248], [80.3125, 13.245]]], "type": "Polygon"}, "id": "0", "properties": {"area_ha": 10.78, "asset_id": "ALV-TN-CP01", "land_use": "periurban_residential", "name": "Ennore Coastal Estuary Land Parcel", "utm_epsg": "EPSG:32644", "value_inr": "18,500,000"}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+    geo_json_fe422f94e12462bc165e988fc9bd1f7e.bindTooltip(
+    function(layer){
+    let div = L.DomUtil.create('div');
+    
+    let handleObject = feature => {
+        if (feature === null) {
+            return '';
+        } else if (typeof(feature)=='object') {
+            return JSON.stringify(feature);
+        } else {
+            return feature;
+        }
+    }
+    let fields = ["asset_id", "name", "land_use", "area_ha"];
+    let aliases = ["ID:", "Name:", "Zoning:", "Area (ha):"];
+    let table = '<table>' +
+        String(
+        fields.map(
+        (v,i)=>
+        `<tr>
+            <th>${aliases[i]}</th>
+            
+            <td>${handleObject(layer.feature.properties[v])}</td>
+        </tr>`).join(''))
+    +'</table>';
+    div.innerHTML=table;
+    
+    return div
+    }
+    ,{
+  "sticky": true,
+  "className": "foliumtooltip",
+});
+                     
+    
+        var popup_cee94ab1c1c9c8ce8bcfafb4a0151be6 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_7700d70c5f4240aa8ac5244431446f0f = $(`<div id="html_7700d70c5f4240aa8ac5244431446f0f" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Inter, -apple-system, sans-serif; min-width: 220px; color: #0f172a; padding: 4px;">         <h4 style="margin: 0 0 6px 0; color: #0284c7; border-bottom: 2px solid #0284c7; padding-bottom: 4px;">             Ennore Coastal Estuary Land Parcel         </h4>         <table style="width: 100%; font-size: 12px; line-height: 1.5;">             <tr><td><b>Asset ID:</b></td><td>ALV-TN-CP01</td></tr>             <tr><td><b>Land Use:</b></td><td>Periurban_Residential</td></tr>             <tr><td><b>Area:</b></td><td>10.78 ha (107,838 m²)</td></tr>             <tr><td><b>Baseline Value:</b></td><td>₹18,500,000</td></tr>             <tr><td><b>UTM EPSG:</b></td><td><code>EPSG:32644</code></td></tr>             <tr><td><b>InSAR Rate:</b></td><td style="color: #dc2626;">                 <b>-9.40 mm/yr</b>             </td></tr>         </table>     </div>     </div>`)[0];
+                popup_cee94ab1c1c9c8ce8bcfafb4a0151be6.setContent(html_7700d70c5f4240aa8ac5244431446f0f);
+            
+        
+
+        geo_json_fe422f94e12462bc165e988fc9bd1f7e.bindPopup(popup_cee94ab1c1c9c8ce8bcfafb4a0151be6)
+        ;
+
+        
+    
+    
+            geo_json_fe422f94e12462bc165e988fc9bd1f7e.addTo(feature_group_8c5b89f40a487075d14330e6758bd26d);
+        
+    
+            feature_group_8c5b89f40a487075d14330e6758bd26d.addTo(map_bc54e9815552d7705f0d6ad904d26101);
+        
+    
+            var feature_group_909b4b6b0c8c2e626cff99767f3ea91d = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var polygon_931763c406f6a8b365d9f3bccf8009e4 = L.polygon(
+                [[33.05315846, 60.505227559999994], [33.05315846, 60.50734154], [33.055272439999996, 60.50734154], [33.055272439999996, 60.505227559999994], [33.05315846, 60.505227559999994]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ef4444", "fillOpacity": 0.45, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 2}
+            ).addTo(feature_group_909b4b6b0c8c2e626cff99767f3ea91d);
+        
+    
+        var popup_66f169aa5e2e50891648095715db6820 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_a61d90a2dd1c17f31da30a6477f61a7d = $(`<div id="html_a61d90a2dd1c17f31da30a6477f61a7d" style="width: 100.0%; height: 100.0%;">             <div style="font-family: sans-serif; font-size: 12px; color: #0f172a; padding: 4px;">                 <b>Scenario:</b> slr_2_15_storm_surge<br/>                 <b>Inundated Area:</b> 64.1%<br/>                 <b>Mean Depth:</b> 0.22 m<br/>                 <b>Max Depth:</b> 0.59 m             </div>             </div>`)[0];
+                popup_66f169aa5e2e50891648095715db6820.setContent(html_a61d90a2dd1c17f31da30a6477f61a7d);
+            
+        
+
+        polygon_931763c406f6a8b365d9f3bccf8009e4.bindPopup(popup_66f169aa5e2e50891648095715db6820)
+        ;
+
+        
+    
+    
+            polygon_931763c406f6a8b365d9f3bccf8009e4.bindTooltip(
+                `<div>
+                     Connected Inundation: 64.1% submerged
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            feature_group_909b4b6b0c8c2e626cff99767f3ea91d.addTo(map_bc54e9815552d7705f0d6ad904d26101);
+        
+    
+            var feature_group_ef5571c299308da9106140cdc647bef5 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var circle_marker_f8e361092c9324effe39f202b4b85c07 = L.circleMarker(
+                [80.31519999999999, 13.247499999999999],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ef4444", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 1.5}
+            ).addTo(feature_group_ef5571c299308da9106140cdc647bef5);
+        
+    
+        var popup_c24e38618d9c3325f9dd358581f7dc18 = L.popup({
+  "maxWidth": 200,
+});
+
+        
+            
+                var html_93c9fd25fa67888fd3e555ee36d6bfff = $(`<div id="html_93c9fd25fa67888fd3e555ee36d6bfff" style="width: 100.0%; height: 100.0%;"><b>InSAR Station:</b> PS-01 (Building Roof)<br/><b>LOS Velocity:</b> -10.81 mm/yr</div>`)[0];
+                popup_c24e38618d9c3325f9dd358581f7dc18.setContent(html_93c9fd25fa67888fd3e555ee36d6bfff);
+            
+        
+
+        circle_marker_f8e361092c9324effe39f202b4b85c07.bindPopup(popup_c24e38618d9c3325f9dd358581f7dc18)
+        ;
+
+        
+    
+    
+            circle_marker_f8e361092c9324effe39f202b4b85c07.bindTooltip(
+                `<div>
+                     PS-01 (Building Roof): -10.81 mm/yr
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_219c4a4a3c17080cf5a9a1ec404dd2a7 = L.circleMarker(
+                [80.3125, 13.2457],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ef4444", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 1.5}
+            ).addTo(feature_group_ef5571c299308da9106140cdc647bef5);
+        
+    
+        var popup_ad55d4f87e835a53fce001e0aefaa707 = L.popup({
+  "maxWidth": 200,
+});
+
+        
+            
+                var html_b7b1e084e5cf7d0b5d27b2469ef17d55 = $(`<div id="html_b7b1e084e5cf7d0b5d27b2469ef17d55" style="width: 100.0%; height: 100.0%;"><b>InSAR Station:</b> PS-02 (Foundation West)<br/><b>LOS Velocity:</b> -8.46 mm/yr</div>`)[0];
+                popup_ad55d4f87e835a53fce001e0aefaa707.setContent(html_b7b1e084e5cf7d0b5d27b2469ef17d55);
+            
+        
+
+        circle_marker_219c4a4a3c17080cf5a9a1ec404dd2a7.bindPopup(popup_ad55d4f87e835a53fce001e0aefaa707)
+        ;
+
+        
+    
+    
+            circle_marker_219c4a4a3c17080cf5a9a1ec404dd2a7.bindTooltip(
+                `<div>
+                     PS-02 (Foundation West): -8.46 mm/yr
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_3d39b201c4bad20f9e114f13eac879ab = L.circleMarker(
+                [80.31599999999999, 13.245299999999999],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ef4444", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 1.5}
+            ).addTo(feature_group_ef5571c299308da9106140cdc647bef5);
+        
+    
+        var popup_1a8d6875dba5514a1e791341f58e610c = L.popup({
+  "maxWidth": 200,
+});
+
+        
+            
+                var html_92aae4a2f24f9e2885407c0d12e76063 = $(`<div id="html_92aae4a2f24f9e2885407c0d12e76063" style="width: 100.0%; height: 100.0%;"><b>InSAR Station:</b> PS-03 (Loading Bay)<br/><b>LOS Velocity:</b> -9.87 mm/yr</div>`)[0];
+                popup_1a8d6875dba5514a1e791341f58e610c.setContent(html_92aae4a2f24f9e2885407c0d12e76063);
+            
+        
+
+        circle_marker_3d39b201c4bad20f9e114f13eac879ab.bindPopup(popup_1a8d6875dba5514a1e791341f58e610c)
+        ;
+
+        
+    
+    
+            circle_marker_3d39b201c4bad20f9e114f13eac879ab.bindTooltip(
+                `<div>
+                     PS-03 (Loading Bay): -9.87 mm/yr
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_2a885b2e68142af9179e190e5377b8f8 = L.circleMarker(
+                [80.31309999999999, 13.248299999999999],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ef4444", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 1.5}
+            ).addTo(feature_group_ef5571c299308da9106140cdc647bef5);
+        
+    
+        var popup_f499b0ffc0dca8bcb2cfc8884e762c44 = L.popup({
+  "maxWidth": 200,
+});
+
+        
+            
+                var html_b95d614e6e57a2403f531e452649d606 = $(`<div id="html_b95d614e6e57a2403f531e452649d606" style="width: 100.0%; height: 100.0%;"><b>InSAR Station:</b> PS-04 (Perimeter Dykes)<br/><b>LOS Velocity:</b> -7.52 mm/yr</div>`)[0];
+                popup_f499b0ffc0dca8bcb2cfc8884e762c44.setContent(html_b95d614e6e57a2403f531e452649d606);
+            
+        
+
+        circle_marker_2a885b2e68142af9179e190e5377b8f8.bindPopup(popup_f499b0ffc0dca8bcb2cfc8884e762c44)
+        ;
+
+        
+    
+    
+            circle_marker_2a885b2e68142af9179e190e5377b8f8.bindTooltip(
+                `<div>
+                     PS-04 (Perimeter Dykes): -7.52 mm/yr
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_968add650ca7a1ed003971550a048c74 = L.circleMarker(
+                [80.314, 13.2465],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ef4444", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 1.5}
+            ).addTo(feature_group_ef5571c299308da9106140cdc647bef5);
+        
+    
+        var popup_f31a992a88e35fdd21231b84c46b75c7 = L.popup({
+  "maxWidth": 200,
+});
+
+        
+            
+                var html_5f06bb729eaee78040d04aee1b1905b3 = $(`<div id="html_5f06bb729eaee78040d04aee1b1905b3" style="width: 100.0%; height: 100.0%;"><b>InSAR Station:</b> PS-05 (Central Benchmark)<br/><b>LOS Velocity:</b> -9.40 mm/yr</div>`)[0];
+                popup_f31a992a88e35fdd21231b84c46b75c7.setContent(html_5f06bb729eaee78040d04aee1b1905b3);
+            
+        
+
+        circle_marker_968add650ca7a1ed003971550a048c74.bindPopup(popup_f31a992a88e35fdd21231b84c46b75c7)
+        ;
+
+        
+    
+    
+            circle_marker_968add650ca7a1ed003971550a048c74.bindTooltip(
+                `<div>
+                     PS-05 (Central Benchmark): -9.40 mm/yr
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            feature_group_ef5571c299308da9106140cdc647bef5.addTo(map_bc54e9815552d7705f0d6ad904d26101);
+        
+    
+            var feature_group_8c08e3c60e2ba3cc2724a0fcac51eae5 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var poly_line_92667c3ff091e771b3ce1625910aaa3f = L.polyline(
+                [[80.314, 13.2465], [80.32, 13.254499999999998]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.85, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(feature_group_8c08e3c60e2ba3cc2724a0fcac51eae5);
+        
+    
+            poly_line_92667c3ff091e771b3ce1625910aaa3f.bindTooltip(
+                `<div>
+                     Arterial Highway East: IMPASSABLE / FLOODED (>0.30m)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_4954f648e72ff4e20335991719a389ef = L.polyline(
+                [[80.314, 13.2465], [80.317, 13.2395]],
+                {"bubblingMouseEvents": true, "color": "#10b981", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#10b981", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.85, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(feature_group_8c08e3c60e2ba3cc2724a0fcac51eae5);
+        
+    
+            poly_line_4954f648e72ff4e20335991719a389ef.bindTooltip(
+                `<div>
+                     Inland Access Road West: PASSABLE / DRY
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_7e86adc046d7daa7c5b821ea5bb33e9f = L.polyline(
+                [[80.314, 13.2465], [80.306, 13.2485]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.85, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(feature_group_8c08e3c60e2ba3cc2724a0fcac51eae5);
+        
+    
+            poly_line_7e86adc046d7daa7c5b821ea5bb33e9f.bindTooltip(
+                `<div>
+                     Port Feeder Road South: IMPASSABLE / FLOODED (>0.30m)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            feature_group_8c08e3c60e2ba3cc2724a0fcac51eae5.addTo(map_bc54e9815552d7705f0d6ad904d26101);
+        
+    
+            L.control.fullscreen(
+                {
+  "position": "topright",
+  "title": "Full Screen",
+  "titleCancel": "Exit Full Screen",
+  "forceSeparateButton": false,
+}
+            ).addTo(map_bc54e9815552d7705f0d6ad904d26101);
+        
+    
+            var tile_layer_18a6209ad8f66d73aa109479e88fef29 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors", "detect_retina": false, "max_native_zoom": 19, "max_zoom": 19, "min_zoom": 0, "no_wrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            );
+            var mini_map_1d36aabcbdd0dcfcdb6fb1d054cb0f19 = new L.Control.MiniMap(
+                tile_layer_18a6209ad8f66d73aa109479e88fef29,
+                {
+  "position": "bottomright",
+  "width": 150,
+  "height": 150,
+  "collapsedWidth": 25,
+  "collapsedHeight": 25,
+  "zoomLevelOffset": -5,
+  "centerFixed": false,
+  "zoomAnimation": false,
+  "toggleDisplay": true,
+  "autoToggleDisplay": false,
+  "minimized": false,
+}
+            );
+            map_bc54e9815552d7705f0d6ad904d26101.addControl(mini_map_1d36aabcbdd0dcfcdb6fb1d054cb0f19);
+        
+    
+            var layer_control_9f6528dd2ffb4097b36698e87b8cdb32_layers = {
+                base_layers : {
+                    "CartoDB Dark Matter (High Contrast Analytics)" : tile_layer_eabba079fdc16cd5302b60d1acf021db,
+                    "Esri World Imagery (Optical Satellite)" : tile_layer_698b31d87e74c58c7a80da9acb87943f,
+                    "OpenStreetMap Standard" : tile_layer_ea9f07b64226a9241c79153ac472cb5b,
+                },
+                overlays :  {
+                    "Cadastral Parcel Boundary" : feature_group_8c5b89f40a487075d14330e6758bd26d,
+                    "Hydrologic Inundation Hazard" : feature_group_909b4b6b0c8c2e626cff99767f3ea91d,
+                    "InSAR Displacement Stations" : feature_group_ef5571c299308da9106140cdc647bef5,
+                    "Critical Access Arterials" : feature_group_8c08e3c60e2ba3cc2724a0fcac51eae5,
+                },
+            };
+            let layer_control_9f6528dd2ffb4097b36698e87b8cdb32 = L.control.layers(
+                layer_control_9f6528dd2ffb4097b36698e87b8cdb32_layers.base_layers,
+                layer_control_9f6528dd2ffb4097b36698e87b8cdb32_layers.overlays,
+                {
+  "position": "topright",
+  "collapsed": false,
+  "autoZIndex": true,
+}
+            ).addTo(map_bc54e9815552d7705f0d6ad904d26101);
+
+        
+</script>
+</html>
