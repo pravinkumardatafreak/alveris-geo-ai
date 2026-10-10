@@ -771,7 +771,15 @@ def main():
             res_a.valuation, res_b.valuation, res_a.risk, res_b.risk, labels=(label_a, label_b)
         )
 
-    _render_geospatial_cockpit(parcel, res_a.inundation, res_a.network.is_physically_isolated, subsidence_rate_mm_yr=-res_a.subsidence.linear_rate_mm_yr if enable_sub else 0.0)
+    sub_rate_val = (
+        -float(res_a.subsidence.mean_subsidence_rate_mm_year) if enable_sub else 0.0
+    )
+    _render_geospatial_cockpit(
+        parcel,
+        res_a.inundation,
+        res_a.network.is_physically_isolated,
+        subsidence_rate_mm_yr=sub_rate_val,
+    )
 
     ctx = DeepDiveContext(
         parcel=parcel,
