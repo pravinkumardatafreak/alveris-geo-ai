@@ -10,7 +10,6 @@ Implements institutional GIS map generation:
 """
 
 from pathlib import Path
-from typing import Any
 import folium
 from folium import plugins
 import geopandas as gpd

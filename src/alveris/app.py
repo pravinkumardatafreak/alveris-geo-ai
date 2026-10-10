@@ -13,6 +13,7 @@ from typing import Any
 
 import numpy as np
 import streamlit as st
+from streamlit_folium import st_folium
 
 from alveris.ingestion.cadastre import adjudicate_cadastral_boundaries
 from alveris.ingestion.parcel import ParcelAsset, load_parcel_from_geojson
@@ -36,8 +37,6 @@ from alveris.reporting.charts import (
     create_valuation_waterfall_chart,
     create_zoning_confidence_chart,
 )
-from streamlit_folium import st_folium
-
 from alveris.reporting.folium_map import create_alveris_folium_map
 from alveris.reporting.map_layers import MapLayerOptions, create_alveris_deck_map
 from alveris.reporting.memo import (
