@@ -5,11 +5,17 @@ intelligence, 2D Earth Observation raster heatmaps, multi-scenario stress-testin
 Plotly financial analytics, and institutional underwriting memo generation.
 """
 
-# pylint: disable=no-member,too-many-locals,too-many-statements,too-many-instance-attributes
+# pylint: disable=no-member,too-many-locals,too-many-statements,too-many-instance-attributes,wrong-import-position
 
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+
+# Self-contained path resolution for direct 'streamlit run src/alveris/app.py' execution
+_SRC_ROOT = str(Path(__file__).resolve().parent.parent)
+if _SRC_ROOT not in sys.path:
+    sys.path.insert(0, _SRC_ROOT)
 
 import numpy as np
 import streamlit as st
