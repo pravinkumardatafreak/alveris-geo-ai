@@ -465,18 +465,29 @@ def _render_deep_dive_tabs(ctx: DeepDiveContext) -> None:
             )
             st.write("### Deep Learning Multi-Spectral Architecture")
             bm = ctx.zoning.rgb_vs_multispectral_benchmark
-            st.json({
+            arch_summary = {
                 "model_name": "MultiSpectralCNN_Bayesian_MC_Dropout",
-                "input_tensor_shape": "[13, 64, 64] (B01-B12)",
+                "input_channels": bm.get("input_channels", 13),
                 "detected_class": ctx.zoning.predicted_class.value,
                 "confidence": f"{ctx.zoning.confidence * 100:.1f}%",
                 "epistemic_uncertainty": ctx.zoning.epistemic_uncertainty,
                 "aleatoric_entropy": ctx.zoning.aleatoric_uncertainty,
                 "is_out_of_distribution": ctx.zoning.is_out_of_distribution,
                 "uncertainty_rating": ctx.zoning.uncertainty_rating,
-                "s2_multispectral_accuracy": f"{bm['multispectral_tensor_accuracy_pct']:.2f}%",
-                "spectral_advantage": f"+{bm['spectral_advantage_delta_pct']:.2f}%",
-            })
+                "red_edge_active": bm.get("red_edge_active", True),
+                "swir_absorption_active": bm.get("swir_absorption_active", True),
+                "dilated_convolutions": bm.get("dilated_convolutions", True),
+                "bayesian_mc_dropout": bm.get("bayesian_mc_dropout", True),
+            }
+            if "multispectral_tensor_accuracy_pct" in bm:
+                arch_summary["s2_multispectral_accuracy"] = (
+                    f"{bm['multispectral_tensor_accuracy_pct']:.2f}%"
+                )
+            if "spectral_advantage_delta_pct" in bm:
+                arch_summary["spectral_advantage"] = (
+                    f"+{bm['spectral_advantage_delta_pct']:.2f}%"
+                )
+            st.json(arch_summary)
 
     with t2:
         st.subheader("Topographic Relief & Multi-Decadal InSAR Sinking")
