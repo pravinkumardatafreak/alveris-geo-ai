@@ -1,0 +1,42 @@
+# ALVERIS Physical Risk Scoring & Confidence Configuration
+# Version: 1.0.0
+# References: docs/ALVERIS_MASTER_SPEC.md (Sections 4, 23, 24, 25)
+
+version: "1.0.0"
+
+# Component Weights for Composite Physical Risk Score (0 - 100 Scale)
+# Note: These represent initial baseline defaults, exposed and configurable per analysis run.
+risk_weights:
+  coastal: 0.30
+  subsidence: 0.20
+  inland_flood: 0.15
+  environmental: 0.15
+  network: 0.20
+
+# Risk Component Thresholds & Scaling
+thresholds:
+  coastal:
+    low_depth_m: 0.15
+    high_depth_m: 1.00
+    critical_inundated_area_fraction: 0.25
+  subsidence:
+    negligible_mm_yr: 2.0
+    moderate_mm_yr: 8.0
+    severe_mm_yr: 15.0
+    critical_mm_yr: 25.0
+  environmental:
+    ndvi_stress_threshold: 0.30
+    ndmi_drought_threshold: -0.10
+    stress_persistence_seasons: 3
+  network:
+    detour_ratio_warning: 1.30      # 30% travel time increase
+    detour_ratio_critical: 2.00     # 100% travel time increase (doubled)
+    isolation_penalty_score: 95.0   # Score assigned if all evacuation/logistics paths severed
+
+# Confidence Model Scoring Weights (0.0 to 1.0)
+confidence_factors:
+  dem_vertical_accuracy_weight: 0.30
+  datum_harmonization_weight: 0.25
+  insar_observation_count_weight: 0.20
+  optical_cloud_free_weight: 0.15
+  network_topological_completeness_weight: 0.10
